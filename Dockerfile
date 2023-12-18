@@ -13,11 +13,11 @@ RUN npm install
 # Copia el resto de los archivos de la aplicación
 COPY . .
 
-# Compila la aplicación React para producción
+# Compila la aplicación Vue.js para producción
 RUN npm run build
 
 # Expone el puerto 80 para que se pueda acceder a la aplicación desde fuera del contenedor
 EXPOSE 5173
 
 # Comando para iniciar la aplicación cuando se ejecute el contenedor
-CMD ["npm", "dev"]
+CMD ["npm", "run", "serve"]
