@@ -101,16 +101,27 @@ export default {
           password: this.password,
         });
 
-        // La respuesta contiene el token, puedes almacenarlo o manejarlo según tus necesidades.
-        const token = response.data.token;
-        if (this.keepSession) {
-          localStorage.setItem("token", token);
-        } else {
-          sessionStorage.setItem("token", token);
-        }
+        // Verifica si la respuesta es exitosa (código 200)
+        if (response.status === 200) {
+          // La respuesta contiene el token, puedes almacenarlo o manejarlo según tus necesidades.
+          const token = response.data.token;
+          if (this.keepSession) {
+            localStorage.setItem("token", token);
+          } else {
+            sessionStorage.setItem("token", token);
+          }
 
-        console.log("Inicio de sesión exitoso. Token:", token);
-        this.$router.push("/dashboard");
+          console.log("Inicio de sesión exitoso. Token:", token);
+
+          // Redirige al dashboard
+          this.$router.push("/dashboard");
+        } else {
+          console.error(
+            "Error al iniciar sesión. Código de respuesta:",
+            response.status
+          );
+          window.alert("Error al iniciar sesión. Verifica tus credenciales.");
+        }
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
         window.alert("Error al iniciar sesión. Verifica tus credenciales.");

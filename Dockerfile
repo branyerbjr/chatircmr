@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 5173
 
 # Comando para iniciar la aplicación cuando se ejecute el contenedor
-CMD ["npm", "preview"]
+CMD ["npm", "dev"]
