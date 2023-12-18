@@ -5,7 +5,14 @@ import Login from '@/views/Auth/Login.vue';
 import Register from '@/views/Auth/Register.vue';
 import Dashboard from '@/views/Admins/Dashboard.vue';
 import Chats from '@/views/Admins/chats.vue';
-import Contacts from '@/views/Admins/contacts.vue'
+import Contacts from '@/views/Admins/contacts.vue';
+
+const isAuthenticated = () => {
+  // Verificar si el usuario está autenticado, por ejemplo, revisando el token
+  const token = localStorage.getItem('token');
+  return !!token; // Devuelve true si el token existe, de lo contrario, false
+};
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,7 +35,7 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
       children: [
         {
           path: 'chat',

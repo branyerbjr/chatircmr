@@ -13,22 +13,25 @@
                   ><img
                     src="https://static-00.iconduck.com/assets.00/whatsapp-icon-2048x2048-wo3g2qq0.png"
                     alt="logo"
-                    style="width: 4rem; padding: 5px;"
+                    style="width: 4rem; padding: 5px"
                 /></router-link>
                 <h4 class="font-weight-bold">INICIAR SESIÓN</h4>
               </div>
               <div class="card-body">
-                <form role="form">
+                <form role="form" @submit.prevent="loginUser">
                   <div class="mb-3">
                     <input
+                      v-model="email"
                       class="form-control form-control-lg"
                       type="email"
                       placeholder="Email"
                       name="email"
+                      autocomplete="email"
                     />
                   </div>
                   <div class="mb-3">
                     <input
+                      v-model="password"
                       class="form-control form-control-lg"
                       type="password"
                       placeholder="Password"
@@ -37,6 +40,7 @@
                   </div>
                   <div class="form-check form-switch mb-3">
                     <input
+                      v-model="keepSession"
                       class="form-check-input"
                       type="checkbox"
                       role="switch"
@@ -62,10 +66,11 @@
               <div class="px-1 pt-0 text-center card-footer px-lg-2">
                 <p class="mx-auto mb-4 text-sm">
                   No tienes cuenta?
-                  <router-link to="/auth/register"><a
-                    class="text-success text-gradient font-weight-bold"
-                    >Registrarse</a
-                  ></router-link>
+                  <router-link to="/auth/register"
+                    ><a class="text-success text-gradient font-weight-bold"
+                      >Registrarse</a
+                    ></router-link
+                  >
                 </p>
               </div>
             </div>
@@ -77,15 +82,48 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: "login",
+  name: "Login",
+  data() {
+    return {
+      email: "",
+      password: "",
+      keepSession: false,
+    };
+  },
+  methods: {
+    async loginUser() {
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/api/login", {
+          email: this.email,
+          password: this.password,
+        });
+
+        // La respuesta contiene el token, puedes almacenarlo o manejarlo según tus necesidades.
+        const token = response.data.token;
+        if (this.keepSession) {
+          localStorage.setItem("token", token);
+        } else {
+          sessionStorage.setItem("token", token);
+        }
+
+        console.log("Inicio de sesión exitoso. Token:", token);
+        this.$router.push("/dashboard");
+      } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        window.alert("Error al iniciar sesión. Verifica tus credenciales.");
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 #logincard {
   margin-top: 10%;
-  
+
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
